@@ -4,5 +4,7 @@ export default defineAppConfig({
     gray: "heather",
     secondary: "kabul",
     danger: "maroon-flush",
+    notifications: {
+    },
   },
 });

@@ -10,11 +10,18 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
+  "overrides": {
+    "vue": "latest"
+  },
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxt/image": "^1.7.0",
     "@nuxt/ui": "^2.13.0",
+    "@pinia/nuxt": "^0.5.1",
     "nuxt": "^3.10.1",
     "sass": "^1.77.1"
+  },
+  "dependencies": {
+    "pinia": "^2.1.7"
   }
 }
