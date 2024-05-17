@@ -1,3 +1,15 @@
+function serialize(element) {
+  const serialisedElement = { ...element };
+  Object.keys(serialisedElement).forEach((key) => {
+    if (
+      typeof serialisedElement[key] !== "number" &&
+      typeof serialisedElement[key] !== "string"
+    ) {
+      serialisedElement[key] = JSON.stringify(serialisedElement[key]);
+    }
+  });
+  return serialisedElement;
+}
 export const useDBStore = defineStore("DBStore", {
   state: () => ({
     open: false,
@@ -34,16 +46,7 @@ export const useDBStore = defineStore("DBStore", {
     },
     async addSession(element) {
       return new Promise((resolve) => {
-        const serialisedElement = { ...element };
-        Object.keys(serialisedElement).forEach((key) => {
-          if (
-            typeof serialisedElement[key] !== "number" &&
-            typeof serialisedElement[key] !== "string"
-          ) {
-            serialisedElement[key] = JSON.stringify(serialisedElement[key]);
-          }
-        });
-        const request = this.session().add(serialisedElement);
+        const request = this.session().add(serialize(serialisedElement));
         request.onsuccess = (e) => {
           element.id = e.target.result;
           this.data.push(element);
@@ -51,6 +54,44 @@ export const useDBStore = defineStore("DBStore", {
         };
         request.onerror = () => {
           console.log("erreur à l'ajout");
+        };
+      });
+    },
+    getSession(id) {
+      return this.data.find((e) => e.id == id);
+    },
+    async removeSession(id) {
+      return new Promise((resolve, reject) => {
+        const request = this.session().delete(+id);
+        request.onsuccess = () => {
+          this.data = this.data.filter((e) => e.id != id);
+          resolve();
+        };
+        request.onerror = () => {
+          console.log("erreur à l'ajout");
+          reject();
+        };
+      });
+    },
+    async putSession(element) {
+      element.id = +element.id;
+      return new Promise((resolve, reject) => {
+        const objectStore = this.session();
+        const request = objectStore.get(element.id);
+        request.onsuccess = (e) => {
+          const newRequest = objectStore.put(serialize(element));
+
+          newRequest.onsuccess = (e) => {
+            this.fetch().then(resolve);
+          };
+          newRequest.onerror = () => {
+            console.log("erreur à l'ajout");
+            reject();
+          };
+        };
+        request.onerror = () => {
+          console.log("erreur à l'ajout");
+          reject();
         };
       });
     },

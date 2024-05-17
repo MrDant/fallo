@@ -1,4 +1,5 @@
 export default {
+  safelist: ["-mt-4"],
   theme: {
     extend: {
       fontFamily: {
