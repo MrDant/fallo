@@ -46,7 +46,7 @@ export const useDBStore = defineStore("DBStore", {
     },
     async addSession(element) {
       return new Promise((resolve) => {
-        const request = this.session().add(serialize(serialisedElement));
+        const request = this.session().add(serialize(element));
         request.onsuccess = (e) => {
           element.id = e.target.result;
           this.data.push(element);
