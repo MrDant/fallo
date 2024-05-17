@@ -43,9 +43,9 @@ export const useDBStore = defineStore("DBStore", {
             serialisedElement[key] = JSON.stringify(serialisedElement[key]);
           }
         });
-        console.log(serialisedElement);
         const request = this.session().add(serialisedElement);
-        request.onsuccess = () => {
+        request.onsuccess = (e) => {
+          element.id = e.target.result;
           this.data.push(element);
           resolve();
         };
