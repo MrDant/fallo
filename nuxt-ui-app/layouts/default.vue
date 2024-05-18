@@ -12,11 +12,11 @@
 
 <style lang="scss" scoped>
 .my-container {
-  @apply h-1 min-h-screen;
+  @apply min-h-screen md:min-h-96;
   @apply md:flex items-center justify-center;
 }
 .card {
-  @apply h-full shadow;
+  @apply min-h-screen h-full shadow;
   @apply md:h-auto md:min-w-96;
 }
 </style>

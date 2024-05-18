@@ -8,6 +8,7 @@
       <div v-for="session in data" :key="session.id" class="session-card">
         <div class="session-col">
           <p class="text-tangaroa pacifico-regular">{{ session.title }}</p>
+          <p class="pl-2 pb-2">{{ countSecondes(session.actions) }} secondes</p>
           <p class="pl-2 pb-2">{{ session.actions.length }} exercice(s)</p>
         </div>
         <NuxtLink
@@ -41,6 +42,9 @@ const { removeSession } = useDBStore();
 const { data } = storeToRefs(useDBStore());
 const loading = ref(false);
 
+function countSecondes(actions) {
+  return actions.reduce((a, b) => a + +b.timer, 0);
+}
 function deleteSession(id) {
   useToast().add({
     title: "Suppression de la session",
