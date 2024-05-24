@@ -13,7 +13,7 @@
             :class="current == index ? ' brightness-50' : ''"
             :key="action"
           >
-            <NuxtImg :src="action.img" />
+            <NuxtImg :src="action.img" fit="cover" class="h-full w-full" />
           </div>
         </div>
       </div>
@@ -28,12 +28,16 @@
               cx="50%"
               cy="50%"
               r="50%"
-              stroke="#685044"
+              :stroke="sleep ? '#912040' : '#685044'"
               stroke-linecap="round"
               stroke-width="20"
               stroke-dasharray="315%"
               :stroke-dashoffset="
-                (timer / session.actions[current].timer) * 315 + '%'
+                (sleep
+                  ? sleep / defaultSleep
+                  : timer / session.actions[current].timer) *
+                  315 +
+                '%'
               "
             ></circle>
           </svg>
@@ -45,10 +49,10 @@
               class="w-full h-full"
             />
             <div
-              class="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center z-10 bg-black bg-opacity-80"
+              class="absolute top-0 left-0 right-0 flex items-center justify-center z-10 bg-black bg-opacity-80"
               v-if="sleep"
             >
-              <p class="text-white shadow-2xl text-5xl">
+              <p class="text-white shadow-2xl text-xl">
                 {{ sleep }}
               </p>
             </div>
@@ -102,6 +106,7 @@ const sleep = ref(null);
 const { getSession } = useDBStore();
 const step = ref();
 const finishAudio = ref();
+const defaultSleep = 5;
 
 onMounted(() => {
   session.value = getSession(id);
@@ -128,7 +133,7 @@ function play() {
       sleep.value = null;
     }
     timer.value--;
-    if (timer.value < 0) {
+    if (timer.value <= 0) {
       next();
     } else if (timer.value <= 3) {
       step.value.play();
@@ -140,16 +145,16 @@ function pause() {
   interval.value = null;
 }
 function next() {
-  sleep.value = 3;
-  current.value++;
-  if (current.value == session.value.actions.length) {
+  if (current.value == session.value.actions.length - 1) {
+    current.value = 0;
     finishAudio.value.play();
     pause();
     useToast().add({
-      title: "Félécitations !",
+      title: "Félicitations !",
       description: "Vous venez de terminer votre série !",
     });
   } else {
+    current.value++;
     initStep();
   }
 }
@@ -160,7 +165,7 @@ function prev() {
 }
 
 function initStep() {
-  sleep.value = 3;
+  sleep.value = defaultSleep;
   timer.value = session.value.actions[current.value].timer;
 }
 </script>
