@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     head: {
       meta: [{ name: "theme-color", content: "#021943" }],
       link: [{ rel: "manifest", href: "/manifest.webmanifest" }],
+      script: [{async: true, src:"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6999497424970315", crossorigin:"anonymous"}]
     },
   },
 });
